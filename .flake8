@@ -3,5 +3,4 @@ extend-ignore = E203, F401
 exclude =
     .git,
     __pycache__,
-    docs/source/conf.py,
-    */migrations/,
+    venv/

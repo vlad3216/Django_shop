@@ -1,14 +1,13 @@
 from os import path
 from django.db import models
 from django.core.validators import MinValueValidator
-
-from shop.mixins.models_mixins import PKMixin
+from shop.mixins.mod_mix import PKMixin
 
 
 def upload_image(instance, filename):
     _name, extension = path.splitext(filename)
-    return f'images/{instance.__class__.__name__.lower()}/' \
-           f'{instance.pk}/image{extension}'
+    return f'images/{instance.__class__.__name__.lower()}/'\
+        f'{instance.pk}/image{extension}'
 
 
 class Item(PKMixin):
@@ -57,7 +56,3 @@ class Product(PKMixin):
 
     def __str__(self) -> str:
         return f'{self.name} | {self.price} | {self.sku}'
-
-
-
-
