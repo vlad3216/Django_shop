@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from shop.mixins.admin_mix import ImageMixins
+from shop1.mixins.admin_mix import ImageMixins
 from items.models import Item, Product, Category
 
 

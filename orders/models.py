@@ -3,9 +3,9 @@ from decimal import Decimal
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from shop.const import MAX_DIGITS, DECIMAL_PLACES
-from shop.mixins.mod_mix import PKMixin
-from shop.model_choice import DiscountTypes
+from shop1.const import MAX_DIGITS, DECIMAL_PLACES
+from shop1.mixins.mod_mix import PKMixin
+from shop1.model_choice import DiscountTypes
 
 
 class Discount(PKMixin):

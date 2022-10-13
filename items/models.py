@@ -1,7 +1,7 @@
 from os import path
 from django.db import models
 from django.core.validators import MinValueValidator
-from shop.mixins.mod_mix import PKMixin
+from shop1.mixins.mod_mix import PKMixin
 
 
 def upload_image(instance, filename):

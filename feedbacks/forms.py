@@ -1,7 +1,7 @@
 from django import forms
 
 from feedbacks.models import Feedback
-from shop.utils import cleaner
+from shop1.utils import cleaner
 
 
 class FeedbackModelForm(forms.ModelForm):
