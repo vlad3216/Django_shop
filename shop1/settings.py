@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import environ
 from pathlib import Path
 
+from django.urls import reverse_lazy
 
 env = environ.Env(
     # set casting, default value
@@ -32,11 +33,8 @@ SECRET_KEY = env('SECRET_KEY', default='SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG', default=True)
-
+DOMAIN = env('DOMAIN', default='http://127.0.0.1:8000')
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', default='').split(',')
-
-# Пользователи будут перенаправлены на главную страницу после входа в систему
-LOGIN_REDIRECT_URL = 'home'
 
 
 # Application definition
@@ -48,10 +46,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'items',
+    'products',
     'orders',
     'feedbacks',
-    'users'
+    'users',
+    'MAIN'
 ]
 
 MIDDLEWARE = [
@@ -69,7 +68,7 @@ ROOT_URLCONF = 'shop1.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -133,12 +132,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = 'static'
+STATICFILES_DIRS = ['static_dev']
 
+MEDIA_URL = 'media/'
+MEDIA_ROOT = 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGOUT_REDIRECT_URL = reverse_lazy('main')
+LOGIN_REDIRECT_URL = reverse_lazy('main')
+LOGIN_URL = reverse_lazy('login')
 
-LOGIN_REDIRECT_URL = 'home'

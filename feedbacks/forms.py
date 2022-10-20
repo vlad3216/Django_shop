@@ -17,4 +17,4 @@ class FeedbackModelForm(forms.ModelForm):
     def clean_text(self):
         text = self.cleaned_data['text']
         return cleaner(text)
-Footer
+

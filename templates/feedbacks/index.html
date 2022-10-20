@@ -7,19 +7,18 @@
 <body>
 <h1>Feedbacks</h1>
 
-{% for item in feedbacks %}
-    <p>
-        <span>Text: {{ item.text }}</span>
-        <span>User: {{ item.user }}</span>
-        <span>Rating: {{ item.rating }}</span>
-    </p>
-{% endfor %}
+<p>
+    <span>Text: {{ item.text }}</span>
+    <span>User: {{ item.user }}</span>
+    <span>Rating: {{ item.rating }}</span>
+</p>
+
 <div>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}
-            <label>{{ field.label }}</label>
-            {{ field }}
+        <label>{{ field.label }}</label>
+        {{ field }}
         {% endfor %}
         <input type="submit" value="Create feedback">
     </form>
