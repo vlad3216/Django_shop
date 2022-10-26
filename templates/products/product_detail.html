@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <section>
+        <div class="container">
+            <div class="card mb-3 ">
+                <img src="{{ product.image.url }}" style="max-width: 320px; alt="{{ product.name }}>
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.category.name }}</p>
+                    <p class="card-text">{{ product.sku }}</p>
+                    <p class="card-text">{{ product.description|truncatewords:16 }}</p>
+                    <div class="text-left">
+                        <div class="h4">{{ product.price }} UAH</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}
+

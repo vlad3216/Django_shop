@@ -1,9 +1,9 @@
 from django import forms
 
-from products.models import Category, Item
+from products.models import Category, Product
 
 
-class ItemForm(forms.Form):
+class ProductForm(forms.Form):
     name = forms.CharField()
     description = forms.CharField(required=False)
     image = forms.ImageField()
@@ -32,4 +32,4 @@ class ItemForm(forms.Form):
         Create Item instance in database
         :return:
         """
-        return Item.objects.create(**self.cleaned_data)
+        return Product.objects.create(**self.cleaned_data)

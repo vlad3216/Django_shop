@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Products</h1>
+
+{% for product in products %}
+    <p>
+        <span>Title: {{ product.name }}</span>
+        <span>Description: {{ product.description }}</span>
+        <span>Category: {{ product.category.name }}</span>
+    </p>
+{% endfor %}
+<div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            <label>{{ field.label }}</label>
+            {{ field }}
+        {% endfor %}
+        <input type="submit" value="Create Products">
+    </form>
+</div>
+</body>
+</html>

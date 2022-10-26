@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import environ
 from pathlib import Path
 
+
 from django.urls import reverse_lazy
 
 env = environ.Env(
@@ -46,11 +47,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+# external apps
+    'django_extensions',
+# my apps
     'products',
     'orders',
     'feedbacks',
     'users',
-    'MAIN'
+    'main'
 ]
 
 MIDDLEWARE = [
@@ -134,6 +138,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 STATICFILES_DIRS = ['static_dev']
+
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = 'media'

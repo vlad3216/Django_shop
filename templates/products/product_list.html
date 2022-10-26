@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <section>
+        <div class="container">
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                {% for product in object_list %}
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="{{ product.image.url }}"
+                                 class="product-image"
+                                 alt="{{ product.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text">{{ product.description|truncatewords:16 }}</p>
+                                <div class="text-left">
+                                    <div class="h4">{{ product.price }} UAH</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">Details...</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock content %}
