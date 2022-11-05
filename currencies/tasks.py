@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @app.task
 def clear_old_currencies():
     CurrencyHistory.objects.filter(
-        created_at__lt=timezone.now() - timedelta(days=3),
+        created_at__lt=timezone.now() - timedelta(days=4),
     ).delete()
 
 
