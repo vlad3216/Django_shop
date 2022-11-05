@@ -1,35 +1,42 @@
+import csv
+import decimal
+from io import StringIO
+
 from django import forms
+from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 
-from products.models import Category, Product
+from products.models import Product, Category
 
 
-class ProductForm(forms.Form):
-    name = forms.CharField()
-    description = forms.CharField(required=False)
-    image = forms.ImageField()
-    category = forms.CharField()
+class ImportCSVForm(forms.Form):
+    file = forms.FileField(
+        validators=[FileExtensionValidator(['csv'])]
+    )
 
-    def is_valid(self):
-        """
-        Validate data
-        :return:
-        """
-        is_valid = super().is_valid()
-        if is_valid:
-            category_name = self.cleaned_data['category']
+    def clean_file(self):
+        csv_file = self.cleaned_data['file']
+        reader = csv.DictReader(StringIO(csv_file.read().decode('utf-8')))
+        products_list = []
+        for product in reader:
             try:
-                category = Category.objects.get(name=category_name)
-            except Category.DoesNotExist:
-                self.errors.update(
-                    {'category': f'Category {category_name} does not exist.'}
+                products_list.append(
+                    Product(
+                        name=product['name'],
+                        description=product['description'],
+                        price=decimal.Decimal(product['price']),
+                        sku=product['sku'],
+                        category=Category.objects.get_or_create(
+                            name=product['category']
+                        )[0]
+                    )
                 )
-            else:
-                self.cleaned_data['category'] = category
-        return is_valid
+            except (KeyError, decimal.InvalidOperation) as err:
+                raise ValidationError(err)
+        if not products_list:
+            raise ValidationError('Wrong file format.')
+        return products_list
 
     def save(self):
-        """
-        Create Item instance in database
-        :return:
-        """
-        return Product.objects.create(**self.cleaned_data)
+        products_list = self.cleaned_data['file']
+        Product.objects.bulk_create(products_list)

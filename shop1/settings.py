@@ -51,10 +51,11 @@ INSTALLED_APPS = [
     'django_extensions',
 # my apps
     'products',
-    'orders',
     'feedbacks',
     'users',
-    'main'
+    'main',
+    'orders',
+    'currencies'
 ]
 
 MIDDLEWARE = [
@@ -150,4 +151,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGOUT_REDIRECT_URL = reverse_lazy('main')
 LOGIN_REDIRECT_URL = reverse_lazy('main')
 LOGIN_URL = reverse_lazy('login')
+CART_SESSION_ID = 'orders'
 

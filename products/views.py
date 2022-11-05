@@ -1,31 +1,16 @@
 import csv
-import decimal
 
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from django.template import loader
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView, TemplateView
-
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, DetailView, TemplateView, FormView
 from weasyprint import HTML
 
-from products.mod_forms import ProductModelForm
-from products.models import Product, Category
-
-
-def products(request, *args, **kwargs):
-    if request.method == 'POST':
-        form = ProductModelForm(request.POST, files=request.FILES)
-        if form.is_valid():
-            form.save()
-    else:
-        form = ProductModelForm()
-    context = {
-        'items': Product.objects.all(),
-        'form': form
-    }
-    return render(request, 'products/index.html', context=context)
+from products.forms import ImportCSVForm
+from products.models import Product
 
 
 class ProductsView(ListView):
@@ -36,49 +21,27 @@ class ProductDetail(DetailView):
     model = Product
 
 
-@login_required
-def export_csv(request):
+def export_csv(request, *args, **kwargs):
     response = HttpResponse(
         content_type='text/csv',
-        headers={'Content-Disposition': 'attachment; filename="products.csv"'},
+        headers={
+            'Content-Disposition': 'attachment; filename="products.csv"'},
     )
-    writer = csv.writer(response)
-    writer.writerow(
-        ['name', 'description', 'category', 'price', 'sku', 'image']
-    )
+    fieldnames = ['name', 'description', 'price', 'sku', 'category', 'image']
+    writer = csv.DictWriter(response, fieldnames=fieldnames)
+    writer.writeheader()
     for product in Product.objects.iterator():
         writer.writerow(
-            [
-             product.name,
-             product.description,
-             product.price,
-             product.sku,
-             product.category,
-             settings.DOMAIN + product.image.url
-            ]
+            {
+                'name': product.name,
+                'description': product.description,
+                'price': product.price,
+                'sku': product.sku,
+                'category': product.category,
+                'image': settings.DOMAIN + product.image.url,
+            }
         )
     return response
-
-
-@login_required
-def import_csv(request):
-    products_list = []
-    with open('import_products.csv') as csv_file:
-        reader = csv.DictReader(csv_file)
-        for product in reader:
-            products_list.append(
-                Product(
-                    name=product['name'],
-                    description=product['description'],
-                    price=decimal.Decimal(product['price']),
-                    sku=product['sku'],
-                    category=Category.objects.get_or_create(
-                        name=product['category']
-                    )[0]
-                )
-            )
-        Product.objects.bulk_create(products_list)
-    return HttpResponse('Import success!')
 
 
 class ExportPDF(TemplateView):
@@ -104,3 +67,18 @@ class ExportPDF(TemplateView):
         context.update({'products': Product.objects.all(),
                         'domain': settings.DOMAIN})
         return context
+
+
+class ImportCSV (FormView):
+    form_class = ImportCSVForm
+    template_name = 'products/import_csv.html'
+    success_url = reverse_lazy('products')
+
+    @method_decorator(login_required)
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
