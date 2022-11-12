@@ -1,7 +1,11 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, get_backends
+from django.contrib.auth.views import LoginView as AuthLoginView
+from django.urls import reverse_lazy
+from django.views.generic import FormView
 
-from users.forms import RegistrationForm
+from users.forms import RegistrationForm, CustomAuthenticationForm
 
 
 def registration(request):
@@ -9,10 +13,21 @@ def registration(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            login(request, form.save())
-            return redirect('products')
+            login(
+                request,
+                form.get_user(),
+                'django.contrib.auth.backends.ModelBackend')
+            return redirect('main')
     else:
         form = RegistrationForm()
-
     context = {'form': form}
     return render(request, 'registration/registration.html', context)
+
+
+class LoginView(AuthLoginView):
+    form_class = CustomAuthenticationForm
+
+    def form_valid(self, form):
+        messages.success(self.request,
+                         f'Welcome back {form.get_user().email}!')
+        return super().form_valid(form)
