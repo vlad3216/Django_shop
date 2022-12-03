@@ -3,6 +3,7 @@ from django.db.models import F
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import RedirectView, TemplateView
+from django.views.decorators.http import require_POST
 
 from orders.forms import UpdateCartOrderForm, RecalculateCartForm
 from orders.mixins import GetCurrentOrderMixin
@@ -50,3 +51,4 @@ class RecalculateCartView(GetCurrentOrderMixin, RedirectView):
         if form.is_valid():
             form.save()
         return self.get(request, *args, **kwargs)
+

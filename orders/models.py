@@ -122,3 +122,28 @@ class OrderProductRelation(models.Model):
 
     class Meta:
         unique_together = ('order', 'product')
+
+
+class OrderItems(PKMixin):
+    order = models.ForeignKey(
+        Order,
+        related_name='items',
+        on_delete=models.CASCADE
+    )
+    product = models.ForeignKey(
+        "products.Product",
+        related_name='order_items',
+        on_delete=models.CASCADE
+    )
+    price = models.DecimalField(
+        max_digits=MAX_DIGITS,
+        decimal_places=DECIMAL_PLACES,
+        default=0
+        )
+    quantity = models.PositiveSmallIntegerField(default=1)
+
+    def __str__(self) -> str:
+        return str(self.id)
+
+    def get_cost(self):
+        return self.price * self.quantity
