@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
+
 User = get_user_model()
 
 
@@ -56,13 +57,18 @@ def test_registration_user(client, faker):
 
     email = faker.email()
     password = faker.password()
+    phone = faker.phone_number()
+    assert not  User.objects.filter(email=email, is_active=False).exists()
 
     data = {
         'email': email,
+        'phone': phone,
         'password1': password,
         'password2': password,
     }
 
     response = client.post(url, data=data, follow=True)
     assert response.status_code == 200
-    assert b"Borgir Corporation is an" in response.content
+    breakpoint()
+    assert User.objects.filter(email=email).exists()
+    assert b"Borgir corporation" in response.content

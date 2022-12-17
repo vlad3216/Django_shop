@@ -6,27 +6,27 @@ from django.utils.translation import gettext_lazy as _
 user = get_user_model()
 
 
-# @admin.register(user)
-# class userAdmin(AuthUserAdmin):
-#     permissions_fieldsets = {
-#         'fields': (('is_active', 'is_staff', 'is_superuser'), 'groups',
-#                    'user_permissions'),
-#         'classes': ('collapse',),
-#     }
-#     add_fieldsets = (
-#         (None, {
-#             'classes': ('wide',),
-#             'fields': ('email', 'phone', 'password1', 'password2'),
-#         }),
-#     )
-#     fieldsets = (
-#         (None, {'fields': ('email', 'password')}),
-#         (_('Personal info'),
-#          {'fields': ('first_name', 'last_name', 'phone',
-#                      'is_phone_valid')}),
-#         (_('Info'),
-#          {'fields': ('last_login', 'date_joined',)}),
-#     )
-#     list_display = (
-#         'id', 'email', 'phone', 'first_name', 'last_name', 'is_staff')
-#     ordering = ('email',)
+@admin.register(user)
+class UserAdmin(AuthUserAdmin):
+    permissions_fieldsets = {
+        'fields': (('is_active', 'is_staff', 'is_superuser'), 'groups',
+                   'user_permissions'),
+        'classes': ('collapse',),
+    }
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'phone', 'password1', 'password2'),
+        }),
+    )
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        (_('Personal info'),
+         {'fields': ('first_name', 'last_name', 'phone',
+                     'is_phone_valid')}),
+        (_('Info'),
+         {'fields': ('last_login', 'date_joined',)}),
+    )
+    list_display = (
+        'id', 'email', 'phone', 'first_name', 'last_name', 'is_staff')
+    ordering = ('email',)

@@ -9,20 +9,20 @@ from django.conf import settings
 from users.forms import RegistrationForm, CustomAuthenticationForm
 
 
-# def registration(request):
-#     if request.method == 'POST':
-#         form = RegistrationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             login(
-#                 request,
-#                 form.get_user(),
-#                 'django.contrib.auth.backends.ModelBackend')
-#             return redirect('main')
-#     else:
-#         form = RegistrationForm()
-#     context = {'form': form}
-#     return render(request, 'registration/registration.html', context)
+def registration(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            login(
+                request,
+                form.get_user(),
+                'django.contrib.auth.backends.ModelBackend')
+            return redirect('main')
+    else:
+        form = RegistrationForm()
+    context = {'form': form}
+    return render(request, 'registration/registration.html', context)
 
 
 class LoginView(AuthLoginView):
